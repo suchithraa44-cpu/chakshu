@@ -489,33 +489,59 @@
           <span class="mode-chip">Corporate & Institutional</span>
         </div>
       </div>
-      <form class="booking-form reveal reveal-delay1" onsubmit="event.preventDefault(); this.querySelector('.btn').textContent='Request Sent — We\'ll Be In Touch'; this.querySelector('.btn').style.pointerEvents='none';">
-        <div class="field-row">
-          <div class="field"><label>Full Name</label><input type="text" required placeholder="Your name"></div>
-          <div class="field"><label>Phone / Email</label><input type="text" required placeholder="How to reach you"></div>
-        </div>
-        <div class="field">
-          <label>What brings you here?</label>
-          <select>
-            <option>Individual Counselling</option>
-            <option>Couple / Family Therapy</option>
-            <option>Student / Exam Stress</option>
-            <option>Career Counselling</option>
-            <option>Corporate Wellness</option>
-            <option>Psycho-Spiritual Guidance</option>
-            <option>Something else</option>
-          </select>
-        </div>
-        <div class="field-row">
-          <div class="field"><label>Preferred Mode</label><select><option>Online</option><option>In-Person, Bengaluru</option><option>No Preference</option></select></div>
-          <div class="field"><label>Preferred Time</label><input type="text" placeholder="e.g. Weekday evenings"></div>
-        </div>
-        <div class="field"><label>Anything you'd like us to know</label><textarea rows="3" placeholder="Optional — share as much or as little as feels right."></textarea></div>
-        <button class="btn btn-clay magnetic" type="submit" style="border:none;">Request Consultation</button>
-      </form>
+      <form class="booking-form reveal reveal-delay1" id="bookingForm">
+
+  <div class="field-row">
+    <div class="field">
+      <label>Full Name</label>
+      <input type="text" required placeholder="Your name" name="name">
+    </div>
+
+    <div class="field">
+      <label>Phone / Email</label>
+      <input type="text" required placeholder="How to reach you" name="phone">
     </div>
   </div>
-</section>
+
+  <div class="field">
+    <label>What brings you here?</label>
+    <select name="concern">
+      <option>Individual Counselling</option>
+      <option>Couple / Family Therapy</option>
+      <option>Student / Exam Stress</option>
+      <option>Career Counselling</option>
+      <option>Corporate Wellness</option>
+      <option>Psycho-Spiritual Guidance</option>
+      <option>Something else</option>
+    </select>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label>Preferred Mode</label>
+      <select name="mode">
+        <option>Online</option>
+        <option>In-Person, Bengaluru</option>
+        <option>No Preference</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Preferred Time</label>
+      <input type="text" placeholder="e.g. Weekday evenings" name="preferredTime">
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Anything you'd like us to know</label>
+    <textarea name="message" rows="3" placeholder="Optional — share as much or as little as feels right."></textarea>
+  </div>
+
+  <button class="btn btn-clay magnetic" type="submit" style="border:none;">
+    Request Consultation
+  </button>
+
+</form>
 
 <section id="contact" class="zone-cream-solid" style="background:var(--cream-2);">
   <div class="wrap wrap-tight contact-grid">
@@ -768,6 +794,59 @@ setInterval(() => {
     quoteBgImgs.forEach((img, i) => img.classList.toggle('active', i === bgIndex));
   }, 500);
 }, 4600);
+// your existing JavaScript
+// ...
+// ...
+
+// PASTE THE NEW APPOINTMENT CODE HERE
+
+const bookingForm = document.getElementById("bookingForm");
+
+bookingForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const button = bookingForm.querySelector(".btn");
+
+    const appointment = {
+        name: bookingForm.querySelector('[name="name"]').value,
+        phone: bookingForm.querySelector('[name="phone"]').value,
+        concern: bookingForm.querySelector('[name="concern"]').value,
+        mode: bookingForm.querySelector('[name="mode"]').value,
+        preferredTime: bookingForm.querySelector('[name="preferredTime"]').value,
+        message: bookingForm.querySelector('[name="message"]').value
+    };
+
+    button.textContent = "Sending...";
+    button.style.pointerEvents = "none";
+
+    try {
+        const response = await fetch("http://localhost:5000/api/appointments", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(appointment)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            button.textContent = "Request Sent — We'll Be In Touch";
+            bookingForm.reset();
+        } else {
+            throw new Error("Failed to save appointment");
+        }
+
+    } catch (error) {
+        console.error("Appointment error:", error);
+        button.textContent = "Something went wrong — Try Again";
+        button.style.pointerEvents = "auto";
+    }
+});
+
+</script>
+</body>
+</html>
 </script>
 
 </body>
