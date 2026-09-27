@@ -190,6 +190,21 @@ body.therapistModalOpen{overflow:hidden}
 }
 body.certificationModalOpen{overflow:hidden}
 </style>
+
+<style id="final-two-fixes">
+/* Fix 1: Show the exact uploaded therapist photos without forced vertical cropping. */
+.portraitCarousel{min-height:0!important;height:auto!important;align-self:start!important;overflow:hidden!important}
+.portraitCarousel img{display:block!important;width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:auto!important;object-fit:contain!important;object-position:center center!important}
+
+/* Fix 2: Compact certification card after removing the unnecessary descriptive lines. */
+.certificationCardInner{padding:24px 28px!important;gap:24px!important;align-items:center!important}
+.certificationCopy h3{margin:0!important;font-size:clamp(28px,3vw,38px)!important}
+.certificationView{margin-top:12px!important;padding:11px 18px!important}
+@media(max-width:700px){
+  .certificationCardInner{padding:20px!important;gap:16px!important}
+  .certificationCopy h3{font-size:28px!important}
+}
+</style>
 </head>
 <body>
 <div class="progress" id="progress"></div>
@@ -211,8 +226,6 @@ body.certificationModalOpen{overflow:hidden}
     <div class="certificationCopy">
       <p class="eyebrow">CERTIFICATION</p>
       <h3>Life Membership Certificate</h3>
-      <p><strong>Counsellors Council of India</strong></p>
-      <p class="certificationDescription">Certificate of Life Membership awarded to Pavan M Srivatsa (Counselling Professional) in recognition of continuing support and work in the area of Psychological Counselling and Guidance.</p>
       <button class="certificationView" id="openCertification" type="button">VIEW CERTIFICATE</button>
     </div>
   </div>
